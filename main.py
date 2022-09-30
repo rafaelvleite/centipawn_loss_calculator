@@ -1,51 +1,51 @@
 # -*- coding: utf-8 -*-
-
-from stockfish import Stockfish
+import chess
+import chess.engine
 import chess.pgn
 from datetime import datetime
-import matplotlib.pyplot as plt
 
+def evaluate_game(board, engine, limit):
+   info = engine.analyse(board, limit)
+   print(info['depth'])
+   return info['score'].white().score(mate_score=10000)
 
 start = datetime.now()
 
-stockfish = Stockfish(path="/usr/local/Cellar/stockfish/15/bin/stockfish", 
-                      depth=22, parameters={"Threads": 4, "Hash": 32768})
+engine = chess.engine.SimpleEngine.popen_uci('/usr/local/Cellar/stockfish/15/bin/stockfish')
 
-stockfish.get_parameters()
+movetimesec = 2
+depth = 22
+limit=chess.engine.Limit(time=movetimesec, depth=depth)
 
 pgn = open("Li, Ben_vs_Niemann, Hans Moke_2021.07.22.pgn")
+pgn = open("Pantzar, Milton_vs_Niemann, Hans Moke_2022.01.08.pgn")
 game = chess.pgn.read_game(pgn)
 game.headers["Event"]
 game.headers["Date"]
 game.headers["White"]
 game.headers["Black"]
 
-white_centipawn_loss_list = []
-black_centipawn_loss_list = []
+board = game.board()
+
 evaluations = []
 
-evaluation = stockfish.get_evaluation()
-evaluations.append(evaluation['value'])
+evaluation = engine.analyse(board, limit=limit)['score'].white().score()
+evaluations.append(evaluation)
 
 for move in game.mainline_moves():
-    stockfish.make_moves_from_current_position([move])
-    evaluation = stockfish.get_evaluation()
-    if evaluation['type'] == 'cp':
-        evaluations.append(evaluation['value'])
-    else:
-        evaluations.append(None)
-    print(move, evaluation)
+    print(board)
+    board.push(move)
+    positionEvaluation = evaluate_game(board, engine, limit)
+    evaluations.append(positionEvaluation)
+        
+print(evaluations)
 
 evaluationsAdjusted = evaluations.copy()
-
-for i,e in enumerate(evaluationsAdjusted[:-1], 1):
-    if evaluationsAdjusted[i] is None:
-        evaluationsAdjusted[i] = evaluationsAdjusted[i-1]
-
-#evaluationsAdjusted = [x for x in evaluationsAdjusted if x!= None]
-evaluationsAdjusted = [x - evaluations[0] for x in evaluationsAdjusted] 
-
+#evaluationsAdjusted = [x - evaluations[0] for x in evaluationsAdjusted] 
 evaluationsAdjusted = [max(min(x, 1000), -1000) for x in evaluationsAdjusted]
+
+white_centipawn_loss_list = []
+black_centipawn_loss_list = []
 
 index = 0
 for singleEvaluation in evaluationsAdjusted:
@@ -58,18 +58,6 @@ for singleEvaluation in evaluationsAdjusted:
             black_centipawn_loss_list.append(current_state_evaluation - previous_state_evaluation)
     index += 1
         
-    
-
-
-plt.plot([x/100 for x in evaluationsAdjusted if x != None], color='magenta', marker='o',mfc='pink' ) #plot the data
-plt.xticks(range(0,len(evaluationsAdjusted)+1, 1)) #set the tick frequency on x-axis
-
-plt.ylabel('Evaluation') #set the label for y axis
-plt.xlabel('Half Move') #set the label for x-axis
-plt.title("Plotting the evaluations") #set the title of the graph
-plt.show() #display the graph
-
-
 
 white_average_centipawn_loss = round(sum(white_centipawn_loss_list) / len(white_centipawn_loss_list))
 black_average_centipawn_loss = round(sum(black_centipawn_loss_list) / len(black_centipawn_loss_list))
@@ -87,14 +75,4 @@ finish = datetime.now()
 print('Demorou mas foi! O job todo demorou: {}'.format(finish - start))
 #####################
 #####################
-
-
-
-
-
-
-
-
-
-
 
