@@ -84,7 +84,7 @@ print("Done! Job complete!")
 #####################
 #####################
 finish = datetime.now()
-print('Demorou mas foi! O job todo demorou: {}'.format(finish - start))
+print('It took long but it\'s done! The entire job took: {}'.format(finish - start))
 #####################
 #####################
 
