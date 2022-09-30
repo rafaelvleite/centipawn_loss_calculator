@@ -1,0 +1,27 @@
+[Site "Saint Louis"]
+[EventCountry "USA"]
+[PlyCount "68"]
+[EventType "tourn"]
+[EventRounds "9"]
+[SourceVersion "1"]
+[ECO "E12"]
+[SourceQuality "1"]
+[BlackElo "2571"]
+[Date "2021.07.22"]
+[Event "USA-ch U20"]
+[SourceVersionDate "2021.09.30"]
+[EventDate "2021.07.16"]
+[EventCategory "10"]
+[Result "0-1"]
+[Round "6"]
+[Black "Niemann, Hans Moke"]
+[SourceDate "2021.09.30"]
+[WhiteElo "2376"]
+[SourceTitle "CBM 203 Extra"]
+[Source "ChessBase"]
+[White "Li, Ben"]
+
+1. d4 Nf6 2. c4 e6 3. Nf3 b6 4. a3 Ba6 5. Qc2 Bb7 6. Nc3 c5 7. e4 cxd4 8. Nxd4 Bc5 9. Nb3 Nc6 10. Bf4 O-O 11. Rd1 e5 12. Bg5 h6 13. Bh4 Nd4 14. Nxd4 exd4 15. Nd5 g5 16. Bg3 Nxe4 17. Bd3 
+( 17. Qxe4 Re8 18. Be5 Bd6 ) 
+17... Bxd5 18. cxd5 Nxg3 19. hxg3 Re8+ 20. Kf1 Qf6 21. Bf5 d3 22. Qxd3 Qxb2 23. Qf3 Kg7 24. Bxd7 Re7 25. Bc6 Rd8 26. a4 Rd6 27. Kg1 Rf6 28. Qg4 Rxf2 29. Kh2 Rxg2+ 30. Kh3 Ree2 31. Qf3 h5 32. Qxg2 g4+ 33. Kh4 Qf6+ 34. Kxh5 Qg6+ 0-1
+
