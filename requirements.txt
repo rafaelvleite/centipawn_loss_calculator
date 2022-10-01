@@ -1,0 +1,5 @@
+zipfile
+chess
+matplotlib
+stockfish
+requests 
