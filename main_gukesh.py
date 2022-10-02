@@ -18,7 +18,6 @@ start = datetime.now()
 
 engine = chess.engine.SimpleEngine.popen_uci('/usr/local/Cellar/stockfish/15/bin/stockfish')
 
-playerName = "niemann"
 movetimesec = 999
 depth = 20
 limit=chess.engine.Limit(time=movetimesec, depth=depth)
@@ -41,9 +40,9 @@ worksheetColumns = ["Date",
                     "Analysis Depth"]
 
 finalDf = pd.DataFrame(columns=worksheetColumns)
-finalDf = pd.read_pickle("finalDf.pkl")
+finalDf = pd.read_pickle('gukesh.pkl')
 
-f = open("niemann_games.pgn")
+f = open("gukesh_games.pgn")
 
 my_list = []
 
@@ -55,10 +54,13 @@ while True:
     my_list.append(game)
 
 
-for game in my_list[479:480]:
+for game in tqdm(my_list[272:273]):
+    # Evaluate all moves
     print(game.headers)
 
-for game in tqdm(my_list[480:]):
+
+for game in tqdm(my_list[274:]):
+    
     try:
         # Evaluate all moves
         print(game.headers)
@@ -138,25 +140,22 @@ for game in tqdm(my_list[480:]):
         
         concat = [finalDf, gameDf]
         finalDf = pd.concat(concat)
-        finalDf.to_pickle('finalDf.pkl')
+        finalDf.to_pickle('gukesh.pkl')
         
+        # Export to Google Sheets
+        scope = ['https://spreadsheets.google.com/feeds']
+        creds = ServiceAccountCredentials.from_json_keyfile_name('escolaxb-faac00a97832.json', scope)
+        client = gspread.authorize(creds)
         
+        # Conectando à pasta de trabalho
+        googleSheets = client.open_by_key("1S7SMTMePkZ3IKcQ9RhWGWSvZxxvYzGPfALRio51HA80")
+          
+        # Capturando os dados da planilha
+        planilha = googleSheets.worksheet('Gukesh')
+        planilha.clear()
+        set_with_dataframe(planilha, finalDf)
     except:
         pass
-
-
-# Export to Google Sheets
-scope = ['https://spreadsheets.google.com/feeds']
-creds = ServiceAccountCredentials.from_json_keyfile_name('escolaxb-faac00a97832.json', scope)
-client = gspread.authorize(creds)
-
-# Conectando à pasta de trabalho
-googleSheets = client.open_by_key("1S7SMTMePkZ3IKcQ9RhWGWSvZxxvYzGPfALRio51HA80")
-  
-# Capturando os dados da planilha
-planilha = googleSheets.worksheet('Niemann')
-planilha.clear()
-set_with_dataframe(planilha, finalDf)
 
 
 #####################
